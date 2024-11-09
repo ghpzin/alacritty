@@ -349,6 +349,15 @@ fn box_drawing(character: char, metrics: &Metrics, offset: &Delta<i8>) -> Raster
         },
         // Arcs: '╭', '╮', '╯', '╰'.
         '\u{256d}' | '\u{256e}' | '\u{256f}' | '\u{2570}' => {
+            let replace_character = match character {
+                '\u{256d}' => '\u{250c}', // '╭' = '┌'
+                '\u{256e}' => '\u{2510}', // '╮' = '┐'
+                '\u{256f}' => '\u{2518}', // '╯' = '┘'
+                '\u{2570}' => '\u{2514}', // '╰' = '└'
+                _ => unreachable!(),
+            };
+            return box_drawing(replace_character, metrics, offset);
+
             canvas.draw_ellipse_arc(stroke_size);
 
             // Mirror `X` axis.
